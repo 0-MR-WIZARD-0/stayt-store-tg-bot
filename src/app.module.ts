@@ -5,6 +5,11 @@ import { session } from 'telegraf';
 import { mainScene } from './modules/scenes/mainScene';
 import { AppUpdate } from './app.service';
 import { calculateScene } from './modules/scenes/calculateScene';
+import { faqScene } from './modules/scenes/faqScene';
+import { awaitPrice } from './modules/scenes/awaitPrice';
+import { affiliateScene } from './modules/scenes/affiliateScene';
+import { feedbackScene } from './modules/scenes/feedbackScene';
+import { askScene } from './modules/scenes/askScene';
 
 @Module({
   imports: [
@@ -18,7 +23,7 @@ import { calculateScene } from './modules/scenes/calculateScene';
       }),
     }),
 ],
-providers: [AppUpdate, mainScene, calculateScene]
+providers: [AppUpdate, mainScene, calculateScene, faqScene, awaitPrice, affiliateScene, askScene, feedbackScene]
 })
 
 

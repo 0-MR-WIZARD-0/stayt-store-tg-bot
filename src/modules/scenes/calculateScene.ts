@@ -8,10 +8,33 @@ export class calculateScene {
   async onSceneEnter(@Ctx() ctx: SceneContext) {
     const calculateMessage = `📊 В нашем калькуляторе Вы можете сделать расчет стоимости товара с 🚚 доставкой до России.\n\n` +
       `‼️ Товары с ≈ НЕ ВЫКУПАЕМ.`;
-    await ctx.editMessageText(calculateMessage, calculateMenu);
+      if (ctx.message?.message_id) {
+        try {
+          await ctx.editMessageText(calculateMessage, calculateMenu);
+        } catch (error) {
+          await ctx.reply(calculateMessage, calculateMenu);
+        }
+      } else await ctx.reply(calculateMessage, calculateMenu);
   }
 
-  @Action('back_to_main')
+  @Action(['hoodies','shoes','t_shirts','accessories'])
+  async onCalculateItem(@Ctx() ctx: SceneContext) {
+    ctx.deleteMessage()
+    if (ctx.callbackQuery && 'data' in ctx.callbackQuery) {
+      const callbackData = ctx.callbackQuery.data as string;
+      ctx.session["categories"] = callbackData;
+    }
+    ctx.scene.leave()
+    ctx.scene.enter("awaitPrice")
+  }
+  
+  @Action('back_to_calculate')
+  async onBackToCalculate(@Ctx() ctx: SceneContext) {
+    ctx.deleteMessage()
+    await ctx.scene.enter('calculate');
+  }
+
+  @Action('back')
   async onBackToMain(@Ctx() ctx: SceneContext) {
     ctx.deleteMessage()
     await ctx.scene.enter('start');
