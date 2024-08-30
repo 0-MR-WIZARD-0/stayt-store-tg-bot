@@ -9,7 +9,8 @@ import { faqScene } from './modules/scenes/faqScene';
 import { awaitPrice } from './modules/scenes/awaitPrice';
 import { affiliateScene } from './modules/scenes/affiliateScene';
 import { feedbackScene } from './modules/scenes/feedbackScene';
-import { askScene } from './modules/scenes/askScene';
+import { intermediateScene } from './modules/scenes/intermediateScene';
+import { ManagerRequestsScene } from './modules/scenes/ManagerRequestScene';
 
 @Module({
   imports: [
@@ -23,8 +24,7 @@ import { askScene } from './modules/scenes/askScene';
       }),
     }),
 ],
-providers: [AppUpdate, mainScene, calculateScene, faqScene, awaitPrice, affiliateScene, askScene, feedbackScene]
+providers: [AppUpdate, mainScene, calculateScene, faqScene, awaitPrice, affiliateScene, intermediateScene, feedbackScene, ManagerRequestsScene]
 })
-
 
 export class AppModule {}

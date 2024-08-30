@@ -1,25 +1,29 @@
 import { Scene, Ctx, On, Action, SceneEnter } from 'nestjs-telegraf';
-import { SceneContext } from 'telegraf/typings/scenes';
 import { Message } from 'telegraf/typings/core/types/typegram';
 import { backToMainMenu } from '../menu/backToMainMenu';
+import { timeoutLocalMessage } from 'src/functions/timeoutDelete.function';
+import { MyContext } from 'src/interfaces/feedback.interface';
+import { getTextMessage } from 'src/functions/getMessage.function';
+
+let localMessage: Message.TextMessage
 
 @Scene('awaitPrice')
 export class awaitPrice {
   @SceneEnter()
-  async onSceneEnter(@Ctx() ctx: SceneContext) {
-   const message = await ctx.reply("Укажите стоимость товара с Poizon: ")
-    ctx.session.__scenes.state["messageId"] = message.message_id;
+  async onSceneEnter(@Ctx() ctx: MyContext) {
+   localMessage = await ctx.reply("Укажите стоимость товара с Poizon: ")
   }
   
   @On("text")
-  async onMessage(@Ctx() ctx: SceneContext) {
+  async onMessage(@Ctx() ctx: MyContext) {
     let finalPrice: number;
     const category = ctx.session["categories"]
-    const message = (ctx.message as Message.TextMessage)?.text
+    const message = getTextMessage(ctx)
     const price = parseFloat(message);
     if (isNaN(price) || price <= 0) {
       ctx.deleteMessage()
-      await ctx.reply('Пожалуйста, введите корректную стоимость товара.');
+      localMessage = await ctx.reply('Пожалуйста, введите корректную стоимость товара.');
+      timeoutLocalMessage(ctx, localMessage, 2000)
     } else {
       ctx.session.__scenes.state["price"] = price;
       ctx.deleteMessage()
@@ -39,13 +43,13 @@ export class awaitPrice {
                 finalPrice = (13*price) + (640*0.5) + 700;
                 break;
               }
-              if(ctx.session.__scenes.state["messageId"]) await ctx.deleteMessage(ctx.session.__scenes.state["messageId"])
+              timeoutLocalMessage(ctx, localMessage, 2000)
               await ctx.reply(`Итоговая стоимость для выбранной категории: ${finalPrice} руб.`, backToMainMenu)
             }
   }
 
   @Action('back')
-  async onBackToMain(@Ctx() ctx: SceneContext) {
+  async onBackToMain(@Ctx() ctx: MyContext) {
     ctx.deleteMessage()
     await ctx.scene.enter('calculate');
   }

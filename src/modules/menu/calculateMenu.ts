@@ -1,5 +1,4 @@
 import { Markup } from "telegraf";
-import { backToMainMenu } from "./backToMainMenu";
 
 export const calculateMenu = Markup.inlineKeyboard([
         Markup.button.callback('Кроссовки', "shoes" ),

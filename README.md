@@ -18,3 +18,4 @@
 ```bash
 # .env-file
     TELEGRAM_BOT_TOKEN="Your_Token"
+    ADMIN_ID="Your_Telegram_Id (type: number)"

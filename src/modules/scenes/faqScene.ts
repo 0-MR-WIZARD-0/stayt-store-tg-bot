@@ -1,18 +1,20 @@
 import { Scene, SceneEnter, Ctx, Action } from 'nestjs-telegraf';
-import { Context } from 'telegraf';
-import { SceneContext } from 'telegraf/typings/scenes';
 import { faqMessage } from '../messages/messages';
+import { backToMainMenu } from '../menu/backToMainMenu';
+import { MyContext } from 'src/interfaces/feedback.interface';
 
 @Scene('FAQ')
 export class faqScene {
+
   @SceneEnter()
-  async onSceneEnter(@Ctx() ctx: Context) {
-    await ctx.reply(faqMessage);
+  async onSceneEnter(@Ctx() ctx: MyContext) {
+    await ctx.reply(faqMessage, backToMainMenu);
   }
 
   @Action('back')
-  async onBackToMain(@Ctx() ctx: SceneContext) {
+  async onBackToMain(@Ctx() ctx: MyContext) {
     ctx.deleteMessage()
     await ctx.scene.enter('start');
   }
+  
 }
